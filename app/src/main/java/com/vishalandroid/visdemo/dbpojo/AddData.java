@@ -8,6 +8,23 @@ import io.realm.RealmObject;
 public class AddData  extends RealmObject {
 
     private String id,name,gender,imgurl;
+    private Double lat,longi;
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLongi() {
+        return longi;
+    }
+
+    public void setLongi(Double longi) {
+        this.longi = longi;
+    }
 
     public String getId() {
         return id;

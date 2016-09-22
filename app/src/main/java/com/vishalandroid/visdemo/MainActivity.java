@@ -17,6 +17,7 @@ import com.vishalandroid.visdemo.response.GetData;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar  progressBar;
     private Realm mRealm;
     private String uid,name,gender,image_url;
+    private RealmResults<AddData> addOrderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
 
+        addOrderList = mRealm.where(AddData.class).findAll();
 
-        netwrokCall();
+        ApiClient.showLog("size",""+addOrderList.size());
+
+        if (addOrderList.size() == 0){
+
+            netwrokCall();
+
+        }else {
+
+            Intent i = new Intent(MainActivity.this,HomeActivity.class);
+            startActivity(i);
+            finish();
+
+        }
+
+
+
 
     }
 
@@ -87,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Intent i =new Intent(MainActivity.this,HomeActivity.class);
                     startActivity(i);
+                    finish();
 
 
                 }else {
