@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.vishalandroid.visdemo.R;
 import com.vishalandroid.visdemo.dbpojo.AddData;
@@ -68,11 +69,17 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyVi
         holder.name.setText(addOrder.getName());
         holder.gender.setText(addOrder.getGender());
 
-        Picasso.with(mContext)
+        Picasso picasso = new Picasso.Builder(mContext)
+                .memoryCache(new LruCache(24000))
+                .build();
+
+        picasso.with(mContext)
                 .load(addOrder.getImgurl())
-                .placeholder(R.mipmap.ic_launcher) //this is optional the image to display while the url image is downloading
+                .placeholder(R.mipmap.ic_launcher)
+                .resize(50,50)
 //                .error(Your Drawable Resource)         //this is also optional if some error has occurred in downloading the image this image would be displayed
                 .into(holder.imgpic);
+
 
     }
 

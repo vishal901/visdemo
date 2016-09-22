@@ -362,12 +362,12 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
                 // successfully captured the image
 
                 Uri uri = picUri;
-                String captuepath = uri.getPath();
+//                String captuepath = uri.getPath();
 
                 image_url = String.valueOf(uri);
 
 
-                ApiClient.showLog("camarea image path ", "" + captuepath);
+ //               ApiClient.showLog("camarea image path ", "" + captuepath);
 
 
             } else if (resultCode == 0) {

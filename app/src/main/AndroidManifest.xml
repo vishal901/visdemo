@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:label="Login"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             >
             <intent-filter>
@@ -27,8 +28,11 @@
         </activity>
 
         <activity android:name=".HomeActivity"
+            android:label="Home"
             android:screenOrientation="portrait"/>
         <activity android:name=".AddDataActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:label="Add Activity"
             android:screenOrientation="portrait"/>
     </application>
 
