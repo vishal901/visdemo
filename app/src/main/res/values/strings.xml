@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">visdemo</string>
+    <string name="err_msg_first_name">enter user name</string>
+    <string name="err_msg_password">enter password</string>
 </resources>

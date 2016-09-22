@@ -64,7 +64,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyVi
         addOrder = addOrderRealmResults.get(position);
 
         //  AddContact results = mRealm.where(AddContact.class).findFirst();
-        holder.u_id.setText(addOrder.getId());
+        holder.u_id.setText(String.valueOf(position+1));
         holder.name.setText(addOrder.getName());
         holder.gender.setText(addOrder.getGender());
 

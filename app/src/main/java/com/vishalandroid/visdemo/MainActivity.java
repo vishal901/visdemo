@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String uid,name,gender,image_url;
     private RealmResults<AddData> addOrderList;
 
+
+    private String st_username,st_password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,24 +55,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+        if (!validateFirstName()) {
+            return;
+        }
 
-        addOrderList = mRealm.where(AddData.class).findAll();
-
-        ApiClient.showLog("size",""+addOrderList.size());
-
-        if (addOrderList.size() == 0){
-
-            netwrokCall();
-
-        }else {
-
-            Intent i = new Intent(MainActivity.this,HomeActivity.class);
-            startActivity(i);
-            finish();
-
+        if (!validatePassword()) {
+            return;
         }
 
 
+        st_username = username.getText().toString().trim();
+        st_password = password.getText().toString().trim();
+
+        if (st_username.equalsIgnoreCase("admin") && st_password.equalsIgnoreCase("admin")){
+
+            addOrderList = mRealm.where(AddData.class).findAll();
+
+            ApiClient.showLog("size",""+addOrderList.size());
+
+            if (addOrderList.size() == 0){
+
+                netwrokCall();
+
+            }else {
+
+                Intent i = new Intent(MainActivity.this,HomeActivity.class);
+                startActivity(i);
+                finish();
+
+            }
+        }else {
+
+            Toast.makeText(MainActivity.this, "Please enter user name and password", Toast.LENGTH_SHORT).show();
+
+        }
 
 
     }
@@ -139,5 +159,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRealm.close();
 
 
+    }
+
+    private boolean validateFirstName() {
+        if (username.getText().toString().trim().isEmpty()) {
+            username.setError(getString(R.string.err_msg_first_name));
+            requestFocus(username);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validatePassword() {
+        if (password.getText().toString().trim().isEmpty()) {
+            password.setError(getString(R.string.err_msg_password));
+            requestFocus(password);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }

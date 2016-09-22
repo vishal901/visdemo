@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.vishalandroid.visdemo.R;
+import com.vishalandroid.visdemo.extra.ApiClient;
+import com.vishalandroid.visdemo.model.setValue;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,7 @@ public class SetListAdapter extends RecyclerView.Adapter<SetListAdapter.MyViewHo
 
     private Context mContext;
     private ArrayList<String> data;
+    private ArrayList<setValue> setValueArrayList = new ArrayList<>();
 
     public SetListAdapter(Context mContext, ArrayList<String> stringArrayList) {
         this.mContext = mContext;
@@ -47,17 +51,50 @@ public class SetListAdapter extends RecyclerView.Adapter<SetListAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_view_raw, parent, false);
+                .inflate(R.layout.set_layout_activity, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
 
 
+        holder.name.setText(data.get(position));
 
+        holder.ck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+
+                    setValue ailment1 = new setValue();
+                    ailment1.setName(data.get(position));
+
+                    setValueArrayList.add(ailment1);
+
+                    for (setValue s : setValueArrayList) {
+
+                        ApiClient.showLog("data", s.getName());
+                    }
+                } else {
+
+                    setValueArrayList.remove(position);
+
+                    for (setValue s : setValueArrayList) {
+
+                        ApiClient.showLog("data", s.getName());
+                    }
+
+                }
+            }
+        });
+
+    }
+
+    public ArrayList<setValue> getAllData(){
+        return setValueArrayList;
     }
 
     @Override

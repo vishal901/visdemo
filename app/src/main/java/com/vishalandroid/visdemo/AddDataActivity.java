@@ -15,11 +15,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -29,6 +29,7 @@ import com.vishalandroid.visdemo.adpter.SetListAdapter;
 import com.vishalandroid.visdemo.dbpojo.AddData;
 import com.vishalandroid.visdemo.extra.ApiClient;
 import com.vishalandroid.visdemo.extra.DividerItemDecoration;
+import com.vishalandroid.visdemo.model.setValue;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -62,6 +63,8 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
     public static String timeStamp;
     private String image_url = "";
     private ArrayList<String> stringArrayList = new ArrayList<>();
+
+    private SetListAdapter orderListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,12 +112,24 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btnsubmit:
 
+                if (!validateFirstName()) {
+                    return;
+                }
+
+                if (image_url.equalsIgnoreCase("")){
+
+                    Toast.makeText(AddDataActivity.this, "Please Take Photo after submit data", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+
+
                 st_name = name.getText().toString();
                 st_address = address.getText().toString();
 
                 SaveDataIntoDatabase(st_name, st_address, st_Gender, st_lat, st_long, image_url);
 
-                Intent i = new Intent(AddDataActivity.this,HomeActivity.class);
+                Intent i = new Intent(AddDataActivity.this, HomeActivity.class);
                 startActivity(i);
                 finish();
 
@@ -143,7 +158,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
     private void ShowAlertDialogActivity() {
 
 
-        Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dailog_select_activity);
         dialog.show();
@@ -163,10 +178,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.setLayoutManager(manager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        SetListAdapter orderListAdapter = new SetListAdapter(this, stringArrayList);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(false);
+        orderListAdapter = new SetListAdapter(this, stringArrayList);
         recyclerView.setAdapter(orderListAdapter);
 
         btnadd.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +186,14 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
 
 
+                dialog.dismiss();
+
+                for (setValue aa : orderListAdapter.getAllData()) {
+
+                    activityselect.append(aa.getName());
+                    activityselect.append(",");
+
+                }
             }
         });
 
@@ -250,6 +270,8 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         addOrder.setName(st_name);
         addOrder.setGender(st_gender);
         addOrder.setImgurl(image_url);
+        addOrder.setLat(st_lat);
+        addOrder.setLongi(st_long);
 
         mRealm.commitTransaction();
         mRealm.close();
@@ -261,6 +283,8 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
 
         System.out.println("Latitude" + location.getLatitude());
         System.out.println("Longitude" + location.getLongitude());
+
+        Toast.makeText(AddDataActivity.this, "Latitude " + location.getLatitude() + "\n" + "Longitude" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
         st_lat = location.getLatitude();
         st_long = location.getLongitude();
@@ -374,5 +398,23 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean validateFirstName() {
+        if (name.getText().toString().trim().isEmpty()) {
+            name.setError(getString(R.string.err_msg_first_name));
+            requestFocus(name);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }
