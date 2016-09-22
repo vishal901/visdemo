@@ -76,7 +76,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.MyVi
         picasso.with(mContext)
                 .load(addOrder.getImgurl())
                 .placeholder(R.mipmap.ic_launcher)
-                .resize(50,50)
+                .resize(400,400)
 //                .error(Your Drawable Resource)         //this is also optional if some error has occurred in downloading the image this image would be displayed
                 .into(holder.imgpic);
 

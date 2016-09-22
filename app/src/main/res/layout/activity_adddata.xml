@@ -21,11 +21,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:inputType="text"
                 android:background="@drawable/btn_ractangle_border"
                 android:hint="Name"
                 android:paddingLeft="5dp" />
 
             <EditText
+                android:inputType="text"
                 android:id="@+id/edt_address_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,6 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:focusable="false"
                 android:background="@drawable/btn_ractangle_border"
                 android:hint="select activity"
                 android:paddingLeft="5dp"></EditText>

@@ -2,6 +2,7 @@ package com.vishalandroid.visdemo;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -164,6 +166,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
 
 
+        stringArrayList.clear();
         stringArrayList.add("Cricket");
         stringArrayList.add("Basketball");
         stringArrayList.add("Swimming");
@@ -252,6 +255,26 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
             } else {
 
                 Toast.makeText(AddDataActivity.this, "Location can't be retrived", Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                        .setCancelable(false)
+                        .setPositiveButton("Goto Settings Page To Enable GPS",
+                                new DialogInterface.OnClickListener(){
+                                    public void onClick(DialogInterface dialog, int id){
+                                        Intent callGPSSettingIntent = new Intent(
+                                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        startActivity(callGPSSettingIntent);
+                                    }
+                                });
+                alertDialogBuilder.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = alertDialogBuilder.create();
+                alert.show();
             }
 
         } else {
