@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vishalandroid.visdemo.adpter.SetListAdapter;
@@ -33,6 +35,7 @@ import com.vishalandroid.visdemo.extra.ApiClient;
 import com.vishalandroid.visdemo.extra.DividerItemDecoration;
 import com.vishalandroid.visdemo.model.setValue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +70,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> stringArrayList = new ArrayList<>();
 
     private SetListAdapter orderListAdapter;
+    private TextView textViewlatlong;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
         name = (EditText) findViewById(R.id.edt_name_add);
         address = (EditText) findViewById(R.id.edt_address_add);
         activityselect = (EditText) findViewById(R.id.edt_activity);
+        textViewlatlong = (TextView) findViewById(R.id.txt_latlong);
 
         activityselect.setOnClickListener(this);
 
@@ -118,7 +123,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
 
-                if (image_url.equalsIgnoreCase("")){
+                if (image_url.equalsIgnoreCase("")) {
 
                     Toast.makeText(AddDataActivity.this, "Please Take Photo after submit data", Toast.LENGTH_SHORT).show();
 
@@ -260,16 +265,16 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
                 alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
                         .setCancelable(false)
                         .setPositiveButton("Goto Settings Page To Enable GPS",
-                                new DialogInterface.OnClickListener(){
-                                    public void onClick(DialogInterface dialog, int id){
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
                                         Intent callGPSSettingIntent = new Intent(
                                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                         startActivity(callGPSSettingIntent);
                                     }
                                 });
                 alertDialogBuilder.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int id){
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
@@ -306,6 +311,8 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
 
         System.out.println("Latitude" + location.getLatitude());
         System.out.println("Longitude" + location.getLongitude());
+
+        textViewlatlong.setText("Latitude " + location.getLatitude() + "\n" + "Longitude" + location.getLongitude());
 
         Toast.makeText(AddDataActivity.this, "Latitude " + location.getLatitude() + "\n" + "Longitude" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
@@ -382,7 +389,24 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
 
             if (resultCode == -1) {
 
-                // successfully captured the image
+                // successfully captured the image and resize image
+
+                try {
+
+                    Bitmap scaledphoto = null;
+                    int height = 400;
+                    int width = 400;
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+                    scaledphoto = Bitmap.createScaledBitmap(photo, height, width, true);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    photo.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+
+                } catch (Exception e){
+
+                    e.printStackTrace();
+                }
+
 
                 Uri uri = picUri;
 //                String captuepath = uri.getPath();
@@ -390,7 +414,7 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
                 image_url = String.valueOf(uri);
 
 
- //               ApiClient.showLog("camarea image path ", "" + captuepath);
+                //               ApiClient.showLog("camarea image path ", "" + captuepath);
 
 
             } else if (resultCode == 0) {
@@ -432,7 +456,6 @@ public class AddDataActivity extends AppCompatActivity implements View.OnClickLi
             return true;
         }
     }
-
 
 
     private void requestFocus(View view) {
