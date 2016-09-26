@@ -1,7 +1,7 @@
 package com.vishalandroid.visdemo.extra;
 
 /**
- * Created by Harsh on 07-01-2016.
+ * Created by vishal on 26/9/16.
  */
 public class AppConfig {
     public static final String BASE_URL = "http://188.166.230.71/interview/interview-test/web/";

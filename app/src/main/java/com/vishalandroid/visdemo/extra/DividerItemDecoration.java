@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by dell980 on 8/24/2016.
+ * Created by vishal on 26/9/16.
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
